@@ -1,0 +1,108 @@
+﻿@using DAL.Data
+@model List<MenuViewModel>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/index.css" />
+}
+
+<h3 class="text-center m-4">Hamburger</h3>
+<div class="row">
+    <!-- Menü -->
+    <div class="col-md-4">
+        <div class="border bg-light p-3 rounded">
+
+            <h4 class="text-center">Filtre</h4>
+
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
+                <label class="form-check-label" for="flexRadioDefault1">
+                    Restoran Puanı
+                </label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
+                <label class="form-check-label" for="flexRadioDefault2">
+                    Görüntülenme
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ürünler -->
+    <div class="col-8 rounded mb-5">
+        @foreach (var item in @Model)
+        {
+            <div class="card mb-3" style="max-width: 840px; position: relative;">
+                <div class="row g-0 bg-light rounded">
+                    <div class="col-md-4 p-2">
+                        <a asp-route-id="@item.Id" asp-action="MenuDetail">
+                            <img class="img-fluid rounded" width="100%" height="100%" src="~/img/@item.Photo" alt="Image description">
+                        </a>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body p-4">
+                            <h5 class="card-title text-primary">
+                                <a class="text-primary fs-5 text-uppercase" asp-route-id="@item.Id" asp-action="MenuDetail">
+                                    @item.Name
+                                </a>
+                            </h5>
+                            <p class="card-text">
+                                @item.Description
+                            </p>
+                            <p class="card-text">
+                                <small class="text-muted">₺@item.Price | 20-30 dk</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- View Count Icon and Count -->
+                <div style="position: absolute; top: 10px; right: 10px; display: flex; align-items: center;">
+                    <i class="bi bi-eye"></i> <!-- Bootstrap Eye Icon -->
+                    <span class="ms-1">@item.ViewCount</span>
+                </div>
+            </div>
+        }
+    </div>
+
+
+
+
+    <!-- Pagination   -->
+    <div>
+        @{
+            var currentPage = ViewBag.CurrentPage ?? 1; // Varsayılan olarak 1. sayfa
+            var pageNumbers = ViewBag.PageNumbers;
+            var nextPage = currentPage + 1;
+            var previousPage = currentPage - 1;
+        }
+
+        <div class="pagination-container mb-2">
+            <ul class="pagination">
+                <li class="page-item disabled">
+                    <a class="page-link" name="pageNumber">@currentPage/@pageNumbers</a>
+                </li>
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" href="/Home/Index/1?pageNumber=1" name="pageNumber"><small>« İlk</small> </a>
+                </li>
+                <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" href="/Home/Index/1?pageNumber=@previousPage" name="pageNumber"><small>←</small> </a>
+                </li>
+                @for (int i = 1; i <= pageNumbers; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link " asp-action="Index" asp-route-pageNumber="@i" name="pageNumber">@i</a>
+                    </li>
+
+                }
+                <li class="page-item @(currentPage == pageNumbers ? "disabled" : "") ">
+                    <a class="page-link" href="/Home/Index/1?pageNumber=@nextPage" name="pageNumber"><small>→</small> </a>
+                </li>
+                <li class="page-item @(currentPage == pageNumbers ? "disabled" : "")">
+                    <a class="page-link" href="/Home/Index/1?pageNumber=@pageNumbers" name="pageNumber"><small>Son »</small> </a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
